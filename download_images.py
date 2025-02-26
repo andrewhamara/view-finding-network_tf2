@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import os
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import argparse
 import multiprocessing
-import cPickle as pkl
+import pickle as pkl
 from PIL import Image
 
 image_folder = './images/'
@@ -14,8 +14,8 @@ def fetch_image(url):
     if os.path.exists(full_path):
         return
 
-    print '\tDownloading', filename
-    file, mime = urllib.urlretrieve(url)
+    print('\tDownloading', filename)
+    file, mime = urllib.request.urlretrieve(url)
     photo = Image.open(file)
     photo.save(full_path)
 
@@ -37,12 +37,12 @@ if __name__ == '__main__':
         num_workers = multiprocessing.cpu_count() + num_workers
 
     if not os.path.exists(image_folder):
-        print 'Creating folder to download images...[{}]'.format(image_folder)
+        print('Creating folder to download images...[{}]'.format(image_folder))
         os.makedirs(image_folder)
 
     db = pkl.load(open("dataset.pkl", "rb"))
-    URLs = [db[i]['url'] for i in xrange(0, len(db), 14)]
+    URLs = [db[i]['url'] for i in range(0, len(db), 14)]
 
-    print('Downloading {} images with {} workers...'.format(len(URLs), num_workers))
+    print(('Downloading {} images with {} workers...'.format(len(URLs), num_workers)))
     pool = multiprocessing.Pool(processes=num_workers)
     pool.map(fetch_image, URLs)

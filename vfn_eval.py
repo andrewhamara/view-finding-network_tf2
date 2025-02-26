@@ -27,7 +27,7 @@ def evaluate_sliding_window(img_filename, crops):
         img = np.repeat(img, 3, 2)
 
     img_crops = np.zeros((batch_size, 227, 227, 3))
-    for i in xrange(len(crops)):
+    for i in range(len(crops)):
         crop = crops[i]
         img_crop = transform.resize(img[crop[1]:crop[1]+crop[3],crop[0]:crop[0]+crop[2]], (227, 227))-0.5
         img_crop = np.expand_dims(img_crop, axis=0)
@@ -79,11 +79,11 @@ def evaluate_FCDB():
         cnt += 1
         crop_cnt += len(crops)
 
-    print 'Average overlap ratio: {:.4f}'.format(accum_overlap_ratio / cnt)
-    print 'Average boundary displacement: {:.4f}'.format(accum_boundary_displacement / (cnt * 4.0))
-    print 'Alpha recall: {:.4f}'.format(100 * float(alpha_cnt) / cnt)
-    print 'Total image evaluated:', cnt
-    print 'Average crops per image:', float(crop_cnt) / cnt
+    print('Average overlap ratio: {:.4f}'.format(accum_overlap_ratio / cnt))
+    print('Average boundary displacement: {:.4f}'.format(accum_boundary_displacement / (cnt * 4.0)))
+    print('Alpha recall: {:.4f}'.format(100 * float(alpha_cnt) / cnt))
+    print('Total image evaluated:', cnt)
+    print('Average crops per image:', float(crop_cnt) / cnt)
 
 
 def evaluate_aesthetics_score(images):
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, snapshot)
 
-    print "Snapshot: {}".format(snapshot)
+    print("Snapshot: {}".format(snapshot))
     start_time = time.time()
     evaluate_FCDB()
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print(("--- %s seconds ---" % (time.time() - start_time)))

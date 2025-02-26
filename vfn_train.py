@@ -179,18 +179,18 @@ if __name__ == '__main__':
         def generate_validation_history(step, tbl):
             return tabulate(tbl, headers=['Step', 'LR', 'Loss'])
 
-        print tabulate(parameter_table)
+        print(tabulate(parameter_table))
 
     for step in range(total_steps+1):
         if step % step_size == 0 and step > 0:
             current_lr *= step_factor
-            print "Learning Rate: {}".format(current_lr)
+            print("Learning Rate: {}".format(current_lr))
         if step % checkpoint_interval == 0:
             saver.save(sess, 'snapshots/ranker_{}_{}.ckpt'.format(experiment_name, embedding_dim), global_step=step)
         t0 = time.time()
         _, loss_val = sess.run([apply_grad_op, L])
         t1 = time.time()
-        print "Iteration {}: L={:0.4f} dT={:0.3f}".format(step, loss_val, t1-t0)
+        print("Iteration {}: L={:0.4f} dT={:0.3f}".format(step, loss_val, t1-t0))
         if step % validation_interval == 0 and step > 0:
             val_avg = 0.0
             for k in range(validation_instances/batch_size_val):
@@ -199,10 +199,10 @@ if __name__ == '__main__':
             val_avg /= float(validation_instances/batch_size_val)
             validation_history[step / validation_interval - 1] = (step, current_lr, val_avg)
             if tabulate_available:
-                print generate_validation_history(step/validation_instances, validation_history)
+                print(generate_validation_history(step/validation_instances, validation_history))
             else:
-                print "\tValidation: L={:0.4f}".format(val_avg)
+                print("\tValidation: L={:0.4f}".format(val_avg))
             np.savez("{}_history.npz".format(experiment_name), validation=validation_history)
     if tabulate_available:
-        print tabulate(parameter_table)
+        print(tabulate(parameter_table))
     sess.close()

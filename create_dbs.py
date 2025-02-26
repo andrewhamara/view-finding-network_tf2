@@ -8,7 +8,7 @@ import numpy as np
 import skimage.transform as transform
 import skimage.io as io
 import tensorflow as tf
-import cPickle as pkl
+import pickle as pkl
 import os
 import re
 import argparse
@@ -28,7 +28,7 @@ def _bytes_feature(value):
 def create_database(tfr_file, image_folder, mtdb, offset, n, size, crops, n_crops):
     expr = re.compile(".*/([0-9_a-f]*\.jpg)")
 
-    print "Writing {} crops of {} images to {}".format(len(crops), n, tfr_file)
+    print("Writing {} crops of {} images to {}".format(len(crops), n, tfr_file))
     with tf.python_io.TFRecordWriter(tfr_file) as writer:
         k = 0
         while k < n:
@@ -64,10 +64,10 @@ def create_database(tfr_file, image_folder, mtdb, offset, n, size, crops, n_crop
                         'crop_scale': _float_feature(info['crop_scale'])}))
                     writer.write(example.SerializeToString())
                 except:
-                    print "Error processing image crop {} of image {}".format(l, match.group(1))
+                    print("Error processing image crop {} of image {}".format(l, match.group(1)))
                     pass
             if (k+1) % 100 == 0:
-                print "Wrote {} examples".format(k+1)
+                print("Wrote {} examples".format(k+1))
             k += 1
     return n
 
@@ -89,9 +89,9 @@ if __name__ == "__main__":
     n_images = int(len(crop_db)/args.n_crops)
 
     if (n_images < args.n_trn + args.n_val) :
-        print "Error: {} images available, {} required for train/validation".format(n_images, args.n_trn+args.n_val)
+        print("Error: {} images available, {} required for train/validation".format(n_images, args.n_trn+args.n_val))
         exit()
     offset_val = create_database(args.training_db, args.image_folder, crop_db, 0,
-            args.n_trn, cnn_input, xrange(args.n_crops), args.n_crops)
+            args.n_trn, cnn_input, range(args.n_crops), args.n_crops)
     val_images = create_database(args.validation_db, args.image_folder, crop_db, offset_val,
-            args.n_val, cnn_input, xrange(args.n_crops), args.n_crops)
+            args.n_val, cnn_input, range(args.n_crops), args.n_crops)
